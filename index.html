@@ -95,23 +95,41 @@
         </div>
         
         <div class="video-container">
-            <div class="video-scenes">
-                <div class="scene-video">
-                    <h3>Opening Scene: The Empty Cup (00:00-00:15)</h3>
-                    <p>Student in bathrobe stares at empty instant noodles cup - the inspiration strikes</p>
-                    <iframe src="https://drive.google.com/file/d/1hQ2Z7U-Pa8pjl5774l4UNzTPrlvJzU4_/preview" width="640" height="360" allow="autoplay"></iframe>
+            <div class="interactive-video-player">
+                <div class="video-wrapper">
+                    <div id="mainVideoPlayer">
+                        <!-- YouTube player will be initialized here via JavaScript -->
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #333; color: white;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+                                <p>Loading video player...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Choice Overlay -->
+                    <div class="choice-overlay" id="choiceOverlay" style="display: none;">
+                        <div class="choice-content">
+                            <h3>What will you choose?</h3>
+                            <div class="choice-buttons">
+                                <button class="choice-video-btn" id="talabatChoice" data-video="ZwLZw_CWIP8">
+                                    <div class="choice-icon">📱</div>
+                                    <div class="choice-text">Order from Talabat</div>
+                                    <div class="choice-subtitle">The easy way out</div>
+                                </button>
+                                <button class="choice-video-btn" id="cookChoice" data-video="itIWt3OlerI">
+                                    <div class="choice-icon">👨‍🍳</div>
+                                    <div class="choice-text">Cook in Dorm Lounge</div>
+                                    <div class="choice-subtitle">The adventurous path</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="scene-video">
-                    <h3>Choice 1: Order from Talabat</h3>
-                    <p>The easy way out - ordering food delivery like a coward</p>
-                    <iframe src="https://drive.google.com/file/d/13U9ImaxMO97NmOhihvpDsDFhWzUMV3Hs/preview" width="640" height="360" allow="autoplay"></iframe>
-                </div>
-                
-                <div class="scene-video">
-                    <h3>Choice 2: Cook in Dorm Lounge</h3>
-                    <p>The adventurous path - making it yourself like a visionary</p>
-                    <iframe src="https://drive.google.com/file/d/1LoUBaiS7-Gzv0NxV7oKLvFkPXwtRaR_P/preview" width="640" height="360" allow="autoplay"></iframe>
+                <div class="video-info">
+                    <h3 id="currentVideoTitle">Dorm Gourmet: The Journey Begins</h3>
+                    <p id="currentVideoDescription">Watch as our student faces the ultimate decision...</p>
                 </div>
             </div>
             

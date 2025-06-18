@@ -81,203 +81,440 @@ function setupNavigation() {
     });
 }
 
-// INTERACTIVE VIDEO SYSTEM
+// INTERACTIVE VIDEO SYSTEM WITH YOUTUBE API
+let player;
+let currentVideoState = 'initial';
+let choiceShown = false;
+
 function setupInteractiveVideo() {
-    const video = document.getElementById('mainVideo');
-    const chaosMeter = document.getElementById('chaosMeter');
-    const chaosPercentage = document.getElementById('chaosPercentage');
-    const playbackSpeed = document.getElementById('playbackSpeed');
-    const subtitleTrack = document.getElementById('subtitleTrack');
-    const interactiveButtons = document.querySelectorAll('.interactive-btn');
-    const chapterItems = document.querySelectorAll('.chapter-item');
-    const videoReactions = document.getElementById('videoReactions');
+    // Setup choice buttons first
+    setupChoiceButtons();
     
-    let chaosLevel = 0;
-    let reactionTimeout;
+    // Update video info display
+    updateVideoInfo('initial');
     
-    // Video event listeners
-    if (video) {
-        video.addEventListener('loadedmetadata', function() {
-            console.log('Video loaded, duration:', this.duration);
-        });
-        
-        video.addEventListener('timeupdate', function() {
-            updateChaosLevel(this.currentTime, this.duration);
-            updateChapterHighlight(this.currentTime);
-        });
-        
-        video.addEventListener('play', function() {
-            playSound('video-play');
-            showVideoReaction('🎬', 'ACTION!');
-        });
-        
-        video.addEventListener('pause', function() {
-            showVideoReaction('⏸️', 'PAUSE FOR DRAMA');
-        });
-        
-        video.addEventListener('ended', function() {
-            showVideoReaction('🏆', 'MASTERPIECE COMPLETE!');
-            playSound('video-end');
-        });
-    }
-    
-    // Playback speed control
-    if (playbackSpeed) {
-        playbackSpeed.addEventListener('change', function() {
-            if (video) {
-                video.playbackRate = parseFloat(this.value);
-                playSound('speed-change');
-                
-                const messages = {
-                    '0.5': 'Savoring the disaster...',
-                    '1': 'Normal chaos restored',
-                    '1.25': 'Panic mode activated!',
-                    '1.5': 'Ludicrous speed!',
-                    '2': 'MICROWAVE MODE ENGAGED!'
-                };
-                
-                showVideoReaction('⚡', messages[this.value] || 'Speed changed!');
-            }
-        });
-    }
-    
-    // Subtitle track control
-    if (subtitleTrack) {
-        subtitleTrack.addEventListener('change', function() {
-            playSound('subtitle-change');
-            
-            const commentaries = {
-                'chef': 'Chef commentary: "What have I done..."',
-                'science': 'Scientific analysis: "This defies physics"',
-                'comedy': 'Comedy track: "Ba dum tss!"',
-                'therapy': 'Therapy session: "It\'s okay, we\'re here for you"'
-            };
-            
-            if (this.value !== 'none') {
-                showVideoReaction('🗣️', commentaries[this.value] || 'Commentary activated');
-            }
-        });
-    }
-    
-    // Interactive buttons
-    interactiveButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const timestamp = parseInt(this.dataset.timestamp);
-            if (video && !isNaN(timestamp)) {
-                video.currentTime = timestamp;
-                video.play();
-                
-                const reactions = {
-                    'disasterBtn': { emoji: '💥', text: 'DISASTER INCOMING!' },
-                    'chaosBtn': { emoji: '🔥', text: 'MAXIMUM CHAOS!' },
-                    'wtfBtn': { emoji: '🤯', text: 'WTF MOMENT!' }
-                };
-                
-                const reaction = reactions[this.id];
-                if (reaction) {
-                    showVideoReaction(reaction.emoji, reaction.text);
-                    chaosLevel = Math.min(100, chaosLevel + 25);
-                    updateChaosMeter();
-                }
-                
-                playSound('interactive-click');
-            }
-        });
-    });
-    
-    // Chapter navigation
-    chapterItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const timestamp = parseInt(this.dataset.time);
-            if (video && !isNaN(timestamp)) {
-                video.currentTime = timestamp;
-                video.play();
-                playSound('chapter-jump');
-                
-                showVideoReaction('📚', 'Chapter jumped!');
-            }
-        });
-    });
-    
-    function updateChaosLevel(currentTime, duration) {
-        // Calculate chaos level based on video progress and content
-        const progress = (currentTime / duration) * 100;
-        
-        // Add chaos spikes at specific moments
-        const chaosSpikes = {
-            30: 20,  // First disaster
-            60: 40,  // Maximum chaos
-            90: 60,  // WTF moment
-            120: 80, // Culinary apocalypse
-            150: 90  // Peak chaos
+    // Load YouTube API if not already loaded
+    if (typeof YT === 'undefined') {
+        console.log('Loading YouTube API...');
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        tag.onerror = function() {
+            console.error('Failed to load YouTube API');
+            showFallbackMessage('Failed to load YouTube API');
         };
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         
-        let baseLevel = progress * 0.5; // Base chaos increases with time
-        
-        // Add spikes
-        Object.keys(chaosSpikes).forEach(timestamp => {
-            if (Math.abs(currentTime - parseInt(timestamp)) < 5) {
-                baseLevel = Math.max(baseLevel, chaosSpikes[timestamp]);
-            }
-        });
-        
-        chaosLevel = Math.min(100, baseLevel);
-        updateChaosMeter();
+        // Set up the callback for when API is ready
+        window.onYouTubeIframeAPIReady = function() {
+            console.log('YouTube API ready');
+            initializePlayer();
+        };
+    } else if (typeof YT.Player !== 'undefined') {
+        // API already loaded
+        console.log('YouTube API already loaded');
+        initializePlayer();
+    } else {
+        // API is loading, wait for it
+        console.log('YouTube API loading, waiting...');
+        window.onYouTubeIframeAPIReady = function() {
+            console.log('YouTube API ready');
+            initializePlayer();
+        };
+    }
+}
+
+function initializePlayer() {
+    const playerElement = document.getElementById('mainVideoPlayer');
+    if (!playerElement) {
+        console.error('Video player element not found');
+        return;
     }
     
-    function updateChaosMeter() {
-        if (chaosMeter && chaosPercentage) {
-            chaosMeter.style.width = chaosLevel + '%';
-            chaosPercentage.textContent = Math.round(chaosLevel) + '%';
-            
-            // Change color based on chaos level
-            if (chaosLevel > 80) {
-                chaosMeter.style.background = 'linear-gradient(45deg, #FF1493, #FF0000)';
-            } else if (chaosLevel > 50) {
-                chaosMeter.style.background = 'linear-gradient(45deg, #FFD700, #FF1493)';
-            } else {
-                chaosMeter.style.background = 'linear-gradient(45deg, #FFD700, #40E0D0)';
+    // Check if YT is available
+    if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+        console.error('YouTube API not loaded');
+        setTimeout(initializePlayer, 1000); // Retry after 1 second
+        return;
+    }
+    
+    try {
+        player = new YT.Player('mainVideoPlayer', {
+            videoId: 'QKfo0UiNG3c',
+            playerVars: {
+                'enablejsapi': 1,
+                'rel': 0,
+                'modestbranding': 1,
+                'fs': 1,
+                'cc_load_policy': 0,
+                'iv_load_policy': 3,
+                'autohide': 1,
+                'origin': window.location.origin
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
             }
+        });
+    } catch (error) {
+        console.error('Error initializing YouTube player:', error);
+        showFallbackMessage();
+    }
+}
+
+function onPlayerError(event) {
+    console.error('YouTube player error:', event.data);
+    let errorMessage = 'Video unavailable';
+    
+    switch(event.data) {
+        case 2:
+            errorMessage = 'Invalid video ID';
+            break;
+        case 5:
+            errorMessage = 'Video cannot be played in an HTML5 player';
+            break;
+        case 100:
+            errorMessage = 'Video not found or private';
+            break;
+        case 101:
+        case 150:
+            errorMessage = 'Video owner has restricted embedding';
+            break;
+        default:
+            errorMessage = 'Unknown video error';
+    }
+    
+    showFallbackMessage(errorMessage);
+}
+
+function showFallbackMessage(message = 'Video unavailable') {
+    const playerElement = document.getElementById('mainVideoPlayer');
+    if (playerElement) {
+        playerElement.innerHTML = `
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                background: #333;
+                color: white;
+                font-family: 'Comic Neue', cursive;
+                text-align: center;
+                padding: 2rem;
+            ">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                <h3 style="margin-bottom: 1rem; color: #FFD700;">${message}</h3>
+                <p style="margin-bottom: 2rem; opacity: 0.8;">Try using simple iframe embed or watch directly on YouTube:</p>
+                <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%;">
+                    <button onclick="trySimpleEmbed()" style="
+                        background: #FFD700;
+                        color: #333;
+                        padding: 1rem 2rem;
+                        border-radius: 10px;
+                        border: none;
+                        font-weight: bold;
+                        cursor: pointer;
+                        font-family: 'Comic Neue', cursive;
+                    ">🔄 Try Simple Video Embed</button>
+                    <a href="https://youtu.be/QKfo0UiNG3c" target="_blank" style="
+                        background: #FF1493;
+                        color: white;
+                        padding: 1rem 2rem;
+                        border-radius: 10px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        text-align: center;
+                    ">🎬 Watch Initial Video on YouTube</a>
+                    <a href="https://youtu.be/ZwLZw_CWIP8" target="_blank" style="
+                        background: #40E0D0;
+                        color: white;
+                        padding: 1rem 2rem;
+                        border-radius: 10px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        text-align: center;
+                    ">📱 Watch Talabat Choice on YouTube</a>
+                    <a href="https://youtu.be/itIWt3OlerI" target="_blank" style="
+                        background: #CC5500;
+                        color: white;
+                        padding: 1rem 2rem;
+                        border-radius: 10px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        text-align: center;
+                    ">👨‍🍳 Watch Cook Choice on YouTube</a>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function trySimpleEmbed() {
+    const playerElement = document.getElementById('mainVideoPlayer');
+    if (playerElement) {
+        console.log('Trying simple iframe embed...');
+        playerElement.innerHTML = `
+            <iframe 
+                src="https://www.youtube.com/embed/QKfo0UiNG3c?rel=0&modestbranding=1&autoplay=0" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen
+                style="width: 100%; height: 100%; border-radius: 15px;"
+                onload="console.log('Simple iframe loaded successfully')"
+                onerror="console.log('Simple iframe failed to load')">
+            </iframe>
+        `;
+        
+        // Hide choice overlay since we can't control simple iframe
+        const choiceOverlay = document.getElementById('choiceOverlay');
+        if (choiceOverlay) {
+            choiceOverlay.style.display = 'none';
         }
+        
+        // Update video info
+        updateVideoInfo('simple');
+        
+        // Show manual choice buttons
+        setTimeout(showManualChoiceButtons, 3000);
     }
-    
-    function updateChapterHighlight(currentTime) {
-        chapterItems.forEach(item => {
-            const startTime = parseInt(item.dataset.time);
-            const nextItem = item.nextElementSibling;
-            const endTime = nextItem ? parseInt(nextItem.dataset.time) : Infinity;
-            
-            if (currentTime >= startTime && currentTime < endTime) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
-        });
+}
+
+function showManualChoiceButtons() {
+    const videoInfo = document.querySelector('.video-info');
+    if (videoInfo) {
+        const manualChoices = document.createElement('div');
+        manualChoices.innerHTML = `
+            <div style="margin-top: 2rem; text-align: center;">
+                <h4 style="color: #FFD700; margin-bottom: 1rem; font-family: 'Permanent Marker', cursive;">
+                    Make Your Choice (Manual):
+                </h4>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                                         <button onclick="switchToVideo('ZwLZw_CWIP8')" style="
+                         background: #40E0D0;
+                         color: white;
+                         padding: 1rem 2rem;
+                         border-radius: 10px;
+                         border: none;
+                         cursor: pointer;
+                         font-weight: bold;
+                         font-family: 'Comic Neue', cursive;
+                     ">📱 Order from Talabat</button>
+                     <button onclick="switchToVideo('itIWt3OlerI')" style="
+                         background: #CC5500;
+                         color: white;
+                         padding: 1rem 2rem;
+                         border-radius: 10px;
+                         border: none;
+                         cursor: pointer;
+                         font-weight: bold;
+                         font-family: 'Comic Neue', cursive;
+                     ">👨‍🍳 Cook in Dorm</button>
+                </div>
+            </div>
+        `;
+        videoInfo.appendChild(manualChoices);
     }
-    
-    function showVideoReaction(emoji, text) {
-        const reactionBubble = videoReactions.querySelector('.reaction-bubble');
-        if (reactionBubble) {
-            const emojiSpan = reactionBubble.querySelector('.reaction-emoji');
-            const textSpan = reactionBubble.querySelector('.reaction-text');
-            
-            emojiSpan.textContent = emoji;
-            textSpan.textContent = text;
-            
-            reactionBubble.style.display = 'flex';
-            
-            // Clear previous timeout
-            if (reactionTimeout) {
-                clearTimeout(reactionTimeout);
-            }
-            
-            // Hide after animation
-            reactionTimeout = setTimeout(() => {
-                reactionBubble.style.display = 'none';
-            }, 2000);
+}
+
+function switchToVideo(videoId) {
+    const playerElement = document.getElementById('mainVideoPlayer');
+    if (playerElement) {
+        playerElement.innerHTML = `
+            <iframe 
+                src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen
+                style="width: 100%; height: 100%; border-radius: 15px;">
+            </iframe>
+        `;
+        
+        // Update video info based on choice
+        if (videoId === 'ZwLZw_CWIP8') {
+            updateVideoInfo('talabat');
+        } else if (videoId === 'itIWt3OlerI') {
+            updateVideoInfo('cook');
         }
     }
 }
+
+function onPlayerReady(event) {
+    console.log('YouTube player ready');
+    // Start checking for choice point
+    startTimeTracking();
+}
+
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        console.log('Video playing');
+        if (!choiceShown && currentVideoState === 'initial') {
+            startTimeTracking();
+        }
+    } else if (event.data == YT.PlayerState.ENDED) {
+        console.log('Video ended');
+        // Reset for replay
+        setTimeout(() => {
+            resetToInitial();
+        }, 3000);
+    }
+}
+
+function startTimeTracking() {
+    if (!player) return;
+    
+    const checkTime = setInterval(() => {
+        if (player && player.getCurrentTime) {
+            const currentTime = player.getCurrentTime();
+            
+            // Show choice overlay at 3:02 (182 seconds)
+            if (currentTime >= 182 && !choiceShown && currentVideoState === 'initial') {
+                showChoiceOverlay();
+                choiceShown = true;
+                clearInterval(checkTime);
+            }
+            
+            // Clear interval if video is no longer playing
+            if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                clearInterval(checkTime);
+            }
+        }
+    }, 1000);
+}
+
+function showChoiceOverlay() {
+    const overlay = document.getElementById('choiceOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        // Pause the video when overlay shows
+        if (player) {
+            player.pauseVideo();
+        }
+        playSound('choice-appear');
+    }
+}
+
+function hideChoiceOverlay() {
+    const overlay = document.getElementById('choiceOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+function setupChoiceButtons() {
+    const talabatBtn = document.getElementById('talabatChoice');
+    const cookBtn = document.getElementById('cookChoice');
+    
+    if (talabatBtn) {
+        talabatBtn.addEventListener('click', function() {
+            selectVideo('talabat', 'ZwLZw_CWIP8');
+        });
+    }
+    
+    if (cookBtn) {
+        cookBtn.addEventListener('click', function() {
+            selectVideo('cook', 'itIWt3OlerI');
+        });
+    }
+}
+
+function selectVideo(choice, videoId) {
+    hideChoiceOverlay();
+    
+    if (player && player.loadVideoById) {
+        player.loadVideoById(videoId);
+        currentVideoState = choice;
+        updateVideoInfo(choice);
+        playSound('choice-select');
+        
+        // Show selection feedback
+        const messages = {
+            'talabat': 'Ordering from Talabat - the easy way out!',
+            'cook': 'Cooking in the dorm - the adventurous path!'
+        };
+        
+        setTimeout(() => {
+            showVideoReaction('🎬', messages[choice]);
+        }, 1000);
+    }
+}
+
+function updateVideoInfo(state) {
+    const titleElement = document.getElementById('currentVideoTitle');
+    const descriptionElement = document.getElementById('currentVideoDescription');
+    
+    const videoInfo = {
+        'initial': {
+            title: 'Dorm Gourmet: The Journey Begins',
+            description: 'Watch as our student faces the ultimate decision at 3:02...'
+        },
+        'simple': {
+            title: 'Dorm Gourmet: The Journey Begins (Simple Mode)',
+            description: 'Watch the video and manually select your choice below when ready!'
+        },
+        'talabat': {
+            title: 'Choice: Order from Talabat',
+            description: 'The easy way out - ordering food delivery'
+        },
+        'cook': {
+            title: 'Choice: Cook in Dorm Lounge',
+            description: 'The adventurous path - making it yourself'
+        }
+    };
+    
+    if (titleElement && videoInfo[state]) {
+        titleElement.textContent = videoInfo[state].title;
+    }
+    
+    if (descriptionElement && videoInfo[state]) {
+        descriptionElement.textContent = videoInfo[state].description;
+    }
+}
+
+function resetToInitial() {
+    if (player && player.loadVideoById) {
+        player.loadVideoById('QKfo0UiNG3c');
+        currentVideoState = 'initial';
+        choiceShown = false;
+        updateVideoInfo('initial');
+        hideChoiceOverlay();
+    }
+}
+
+// Legacy video functions for compatibility
+function showVideoReaction(emoji, text) {
+    // Create a simple reaction display
+    const reactionDisplay = document.createElement('div');
+    reactionDisplay.className = 'video-reaction-popup';
+    reactionDisplay.innerHTML = `<span class="reaction-emoji">${emoji}</span><span class="reaction-text">${text}</span>`;
+    reactionDisplay.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        border: 2px solid #FFD700;
+        z-index: 1000;
+        font-family: 'Comic Neue', cursive;
+        font-size: 1.2rem;
+        animation: reactionPop 2s ease-out forwards;
+        pointer-events: none;
+    `;
+    
+    document.body.appendChild(reactionDisplay);
+    
+    setTimeout(() => {
+        if (reactionDisplay.parentNode) {
+            reactionDisplay.parentNode.removeChild(reactionDisplay);
+        }
+         }, 2000);
+}
+
+// Legacy video functions removed - replaced with YouTube API functionality above
 
 // CUSTOM CURSOR SYSTEM
 function setupCustomCursor() {
