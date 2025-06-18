@@ -447,7 +447,7 @@ function updateVideoInfo(state) {
     const videoInfo = {
         'initial': {
             title: 'Dorm Gourmet: From D2 to Decision',
-            description: 'Follow our kandura-wearing chef from NYUAD\'s D2 dining hall to the convenience store, ending with the Talabat moment at 3:02...'
+            description: 'Watch the journey from D2 dining hall to the convenience store, leading to the ultimate choice...'
         },
         'simple': {
             title: 'Dorm Gourmet: From D2 to Decision (Simple Mode)',
