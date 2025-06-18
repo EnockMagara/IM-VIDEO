@@ -696,147 +696,7 @@ section {
     50% { transform: scale(1.2); }
 }
 
-/* SIMULATOR SECTION */
-.simulator {
-    background: var(--wallpaper-beige);
-    position: relative;
-}
 
-.simulator-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 3rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.ingredients-panel {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    border: 3px solid var(--microwave-turquoise);
-}
-
-.ingredients-panel h3 {
-    font-family: 'Permanent Marker', cursive;
-    color: var(--burnt-orange);
-    margin-bottom: 1rem;
-}
-
-.draggable-ingredients {
-    display: grid;
-    gap: 1rem;
-}
-
-.draggable-item {
-    padding: 1rem;
-    background: var(--chaos-yellow);
-    border-radius: 10px;
-    cursor: grab;
-    transition: all 0.3s ease;
-    border: 2px dashed transparent;
-    font-weight: bold;
-}
-
-.draggable-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.draggable-item.dragging {
-    opacity: 0.5;
-    transform: rotate(15deg);
-    cursor: grabbing;
-}
-
-.microwave-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.microwave {
-    width: 300px;
-    height: 250px;
-    background: #2C2C2C;
-    border-radius: 15px;
-    padding: 1rem;
-    border: 3px solid var(--microwave-turquoise);
-    position: relative;
-}
-
-.microwave-display {
-    background: #000;
-    color: var(--microwave-turquoise);
-    padding: 0.5rem;
-    text-align: center;
-    font-family: monospace;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-}
-
-.microwave-interior {
-    width: 100%;
-    height: 120px;
-    background: #333;
-    border-radius: 10px;
-    border: 2px solid #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-}
-
-.microwave-interior.drag-over {
-    background: var(--microwave-turquoise);
-    border-color: var(--neon-pink);
-    animation: microwaveGlow 0.5s ease-in-out infinite alternate;
-}
-
-@keyframes microwaveGlow {
-    from { box-shadow: inset 0 0 20px rgba(64, 224, 208, 0.5); }
-    to { box-shadow: inset 0 0 40px rgba(64, 224, 208, 0.8); }
-}
-
-.drop-hint {
-    color: #888;
-    font-style: italic;
-    text-align: center;
-}
-
-.microwave-controls {
-    display: flex;
-    gap: 1rem;
-}
-
-.microwave-btn {
-    flex: 1;
-    padding: 0.5rem;
-    background: var(--burnt-orange);
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.microwave-btn:hover {
-    background: var(--neon-pink);
-}
-
-.reaction-display {
-    margin-top: 2rem;
-    min-height: 100px;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    text-align: center;
-    font-size: 1.2rem;
-    border: 3px dashed var(--burnt-orange);
-}
 
 /* FINAL PLATING SECTION */
 .final-plating {
@@ -1821,9 +1681,7 @@ section {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .simulator-container {
-        grid-template-columns: 1fr;
-    }
+
     
     .expectation-reality {
         grid-template-columns: 1fr;

@@ -13,7 +13,6 @@ function initializeWebsite() {
     setupHeistFiles();
     setupIngredientsSection();
     setupChoicePanel();
-    setupSimulator();
     setupFinalPlating();
     setupBloopers();
     setupScrollEffects();
@@ -572,9 +571,9 @@ function setupLandingInteractions() {
         playSound('chaos');
         this.classList.add('exploding');
         
-        // Scroll to next section with dramatic effect
+        // Scroll to film section with dramatic effect
         setTimeout(() => {
-            document.getElementById('heist').scrollIntoView({ 
+            document.getElementById('film').scrollIntoView({ 
                 behavior: 'smooth',
                 block: 'start'
             });
@@ -710,119 +709,9 @@ function setupChoicePanel() {
     });
 }
 
-// SIMULATOR DRAG AND DROP
-function setupSimulator() {
-    const draggableItems = document.querySelectorAll('.draggable-item');
-    const microwaveInterior = document.getElementById('microwaveInterior');
-    const startMicrowave = document.getElementById('startMicrowave');
-    const clearMicrowave = document.getElementById('clearMicrowave');
-    const reactionDisplay = document.getElementById('reactionDisplay');
-    
-    let microwaveContents = [];
-    
-    // Drag and drop functionality
-    draggableItems.forEach(item => {
-        item.addEventListener('dragstart', function(e) {
-            e.dataTransfer.setData('text/plain', this.dataset.ingredient);
-            this.classList.add('dragging');
-        });
-        
-        item.addEventListener('dragend', function() {
-            this.classList.remove('dragging');
-        });
-    });
-    
-    microwaveInterior.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('drag-over');
-    });
-    
-    microwaveInterior.addEventListener('dragleave', function() {
-        this.classList.remove('drag-over');
-    });
-    
-    microwaveInterior.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('drag-over');
-        
-        const ingredient = e.dataTransfer.getData('text/plain');
-        addToMicrowave(ingredient);
-    });
-    
-    function addToMicrowave(ingredient) {
-        if (microwaveContents.length < 6) {
-            microwaveContents.push(ingredient);
-            updateMicrowaveDisplay();
-            playSound('microwave-beep');
-        } else {
-            showReaction("🚨 MICROWAVE OVERLOAD! 🚨", 'error');
-        }
-    }
-    
-    function updateMicrowaveDisplay() {
-        const dropHint = microwaveInterior.querySelector('.drop-hint');
-        if (microwaveContents.length > 0) {
-            dropHint.innerHTML = microwaveContents.map(ing => `<div>${getIngredientEmoji(ing)} ${ing}</div>`).join('');
-        } else {
-            dropHint.innerHTML = 'Drop ingredients here!';
-        }
-    }
-    
-    startMicrowave.addEventListener('click', function() {
-        if (microwaveContents.length > 0) {
-            startMicrowaving();
-        } else {
-            showReaction("🤔 Add some ingredients first!", 'warning');
-        }
-    });
-    
-    clearMicrowave.addEventListener('click', function() {
-        microwaveContents = [];
-        updateMicrowaveDisplay();
-        reactionDisplay.innerHTML = '';
-        playSound('microwave-clear');
-    });
-    
-    function startMicrowaving() {
-        const microwave = document.getElementById('microwave');
-        microwave.classList.add('microwave-running');
-        
-        let countdown = 30;
-        const display = document.querySelector('.microwave-display');
-        
-        const timer = setInterval(() => {
-            display.textContent = `00:${countdown.toString().padStart(2, '0')}`;
-            countdown--;
-            
-            if (countdown < 0) {
-                clearInterval(timer);
-                finishMicrowaving();
-            }
-        }, 100);
-        
-        playSound('microwave-running');
-    }
-    
-    function finishMicrowaving() {
-        const microwave = document.getElementById('microwave');
-        microwave.classList.remove('microwave-running');
-        
-        const display = document.querySelector('.microwave-display');
-        display.textContent = 'DONE';
-        
-        const reaction = generateMicrowaveReaction(microwaveContents);
-        showReaction(reaction.text, reaction.type);
-        
-        playSound('microwave-ding');
-        
-        // Scroll to final plating
-        setTimeout(() => {
-            document.getElementById('plating').scrollIntoView({ 
-                behavior: 'smooth' 
-            });
-        }, 2000);
-    }
-}
+
+
+
 
 // FINAL PLATING EFFECTS
 function setupFinalPlating() {
@@ -1048,6 +937,20 @@ function getRandomQuote() {
 
 function getIngredientEmoji(ingredient) {
     const emojis = {
+        // Main simulator ingredients
+        'rice': '🍚',
+        'arabic-bread': '🥖',
+        'chocolate': '🍫',
+        'canned-goods': '🥫',
+        'tomato': '🍅',
+        'soda': '🥤',
+        'water': '💧',
+        'mystery-can': '❓',
+        'bread-loaf': '🍞',
+        'snacks': '🍿',
+        'peanuts': '🥜',
+        
+        // Additional ingredients
         'pop-tart': '🔥',
         'cheese': '🧀',
         'ketchup': '🍅',
@@ -1059,42 +962,7 @@ function getIngredientEmoji(ingredient) {
     return emojis[ingredient] || '🤔';
 }
 
-function generateMicrowaveReaction(contents) {
-    const combinations = {
-        'pop-tart,cheese': { text: "🔥 You've created the world's first breakfast pizza! It's... actually not terrible?", type: 'success' },
-        'ketchup,banana': { text: "😱 This unholy alliance has opened a portal to flavor hell!", type: 'disaster' },
-        'jerky,butter': { text: "🥩 Congratulations! You've made jerky... butterier. Somehow.", type: 'weird' },
-        'pop-tart,ketchup,cheese': { text: "🍕 It's like pizza's disappointing cousin who lives in the basement!", type: 'chaos' }
-    };
-    
-    const contentStr = contents.sort().join(',');
-    
-    if (combinations[contentStr]) {
-        return combinations[contentStr];
-    }
-    
-    // Generate random reaction based on number of ingredients
-    if (contents.length >= 4) {
-        return { text: "💥 TOO MUCH CHAOS! The microwave is having an existential crisis!", type: 'explosion' };
-    } else if (contents.length === 1) {
-        return { text: "🤔 Simple... but are we sure this counts as cooking?", type: 'boring' };
-    } else {
-        return { text: "🎲 " + getRandomQuote(), type: 'random' };
-    }
-}
 
-function showReaction(text, type) {
-    const reactionDisplay = document.getElementById('reactionDisplay');
-    reactionDisplay.innerHTML = `<div class="reaction-${type}">${text}</div>`;
-    
-    // Add special effects based on type
-    if (type === 'explosion') {
-        createExplosionEffect(
-            reactionDisplay.offsetLeft + reactionDisplay.offsetWidth / 2,
-            reactionDisplay.offsetTop + reactionDisplay.offsetHeight / 2
-        );
-    }
-}
 
 function createMoneyRain() {
     for (let i = 0; i < 20; i++) {
