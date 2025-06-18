@@ -1425,6 +1425,8 @@ section {
         font-size: 1rem;
     }
 }
+
+.chapter-item {
     transition: all 0.3s ease;
     border: 2px solid transparent;
 }
@@ -1555,11 +1557,58 @@ section {
 }
 
 .behind-scenes-container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+}
+
+.bts-video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.bts-video-container .video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background: #000;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.bts-video-container .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+}
+
+.video-description {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.video-description h3 {
+    font-family: 'Permanent Marker', cursive;
+    color: var(--chaos-yellow);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.video-description p {
+    color: #ddd;
+    font-size: 1.1rem;
+    line-height: 1.6;
 }
 
 .bts-timeline {

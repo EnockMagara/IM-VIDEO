@@ -446,20 +446,20 @@ function updateVideoInfo(state) {
     
     const videoInfo = {
         'initial': {
-            title: 'Dorm Gourmet: The Journey Begins',
-            description: 'Watch as our student faces the ultimate decision at 3:02...'
+            title: 'Dorm Gourmet: From D2 to Decision',
+            description: 'Follow our kandura-wearing chef from NYUAD\'s D2 dining hall to the convenience store, ending with the Talabat moment at 3:02...'
         },
         'simple': {
-            title: 'Dorm Gourmet: The Journey Begins (Simple Mode)',
-            description: 'Watch the video and manually select your choice below when ready!'
+            title: 'Dorm Gourmet: From D2 to Decision (Simple Mode)',
+            description: 'Watch the journey and manually select your choice below when ready!'
         },
         'talabat': {
-            title: 'Choice: Order from Talabat',
-            description: 'The easy way out - ordering food delivery'
+            title: 'The Safe Option: Talabat Delivery',
+            description: 'But wait... there\'s a plot twist! The Talabat bag contains something unexpected.'
         },
         'cook': {
-            title: 'Choice: Cook in Dorm Lounge',
-            description: 'The adventurous path - making it yourself'
+            title: 'The Experimental Path: Dorm Kitchen Creation',
+            description: 'No heating required - just canned drink over bread, squeezed tomato, and whatever\'s in that mystery can!'
         }
     };
     
