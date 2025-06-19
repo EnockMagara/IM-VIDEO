@@ -15,6 +15,15 @@
     --subtle-gold: #B7791F;
     --neutral-grey: #4A5568;
     --light-cream: #FFFEF7;
+    
+    /* Legacy variable mappings for compatibility */
+    --microwave-turquoise: #2C7A7B;
+    --neon-pink: #E53E3E;
+    --burnt-orange: #D69E2E;
+    --chaos-yellow: #B7791F;
+    --dorm-grey: #4A5568;
+    --butter-yellow: #B7791F;
+    --wallpaper-beige: #F7FAFC;
 }
 
 body {
@@ -470,7 +479,7 @@ section {
 
 /* INGREDIENTS SECTION */
 .ingredients-madness {
-    background: var(--wallpaper-beige);
+    background: var(--soft-beige);
     position: relative;
 }
 
@@ -1584,7 +1593,7 @@ section {
 
 /* TEAM SECTION */
 .team-section {
-    background: var(--wallpaper-beige);
+    background: var(--soft-beige);
 }
 
 .team-container {
