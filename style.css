@@ -8,18 +8,18 @@
 }
 
 :root {
-    --microwave-turquoise: #40E0D0;
-    --neon-pink: #FF1493;
-    --burnt-orange: #CC5500;
-    --wallpaper-beige: #F5F5DC;
-    --chaos-yellow: #FFD700;
-    --dorm-grey: #696969;
-    --butter-yellow: #FFDB58;
+    --primary-teal: #2C7A7B;
+    --accent-coral: #E53E3E;
+    --warm-orange: #D69E2E;
+    --soft-beige: #F7FAFC;
+    --subtle-gold: #B7791F;
+    --neutral-grey: #4A5568;
+    --light-cream: #FFFEF7;
 }
 
 body {
-    font-family: 'Comic Neue', cursive;
-    background: linear-gradient(45deg, var(--wallpaper-beige), #FFF8DC, var(--wallpaper-beige));
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(45deg, var(--soft-beige), var(--light-cream), var(--soft-beige));
     background-size: 300px 300px;
     overflow-x: hidden;
     cursor: none;
@@ -32,10 +32,10 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(135deg, var(--dorm-grey), #2C2C2C);
+    background: linear-gradient(135deg, var(--neutral-grey), #2D3748);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 3px solid var(--microwave-turquoise);
+    border-bottom: 3px solid var(--primary-teal);
     z-index: 1000;
     animation: navFloat 4s ease-in-out infinite;
 }
@@ -61,18 +61,19 @@ body {
 }
 
 .logo-text {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
     font-size: 1.5rem;
-    color: var(--chaos-yellow);
-    text-shadow: 2px 2px 0 var(--burnt-orange);
-    transform: rotate(-2deg);
+    color: var(--subtle-gold);
+    text-shadow: 1px 1px 0 var(--warm-orange);
+    transform: rotate(-1deg);
 }
 
 .logo-subtitle {
     font-size: 0.8rem;
-    color: var(--neon-pink);
-    font-weight: bold;
-    transform: rotate(1deg);
+    color: var(--accent-coral);
+    font-weight: 500;
+    transform: rotate(0.5deg);
     margin-top: -5px;
 }
 
@@ -114,13 +115,13 @@ body {
 
 .nav-link:hover,
 .nav-link.active {
-    transform: scale(1.1) rotate(5deg);
-    background: var(--microwave-turquoise);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05) rotate(2deg);
+    background: var(--primary-teal);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 .nav-link.active {
-    border: 2px solid var(--chaos-yellow);
+    border: 2px solid var(--subtle-gold);
 }
 
 .nav-icon {
@@ -131,8 +132,8 @@ body {
 
 .nav-text {
     font-size: 0.9rem;
-    font-weight: bold;
-    font-family: 'Permanent Marker', cursive;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
 }
 
 @keyframes iconBounce {
@@ -150,7 +151,7 @@ body {
 .nav-hamburger span {
     width: 25px;
     height: 3px;
-    background: var(--chaos-yellow);
+    background: var(--subtle-gold);
     transition: all 0.3s ease;
 }
 
@@ -212,9 +213,9 @@ body {
 .landing {
     min-height: 100vh;
     background: 
-        radial-gradient(circle at 20% 80%, var(--microwave-turquoise) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, var(--neon-pink) 0%, transparent 50%),
-        linear-gradient(135deg, var(--burnt-orange) 0%, var(--chaos-yellow) 100%);
+        radial-gradient(circle at 20% 80%, var(--primary-teal) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--accent-coral) 0%, transparent 50%),
+        linear-gradient(135deg, var(--warm-orange) 0%, var(--subtle-gold) 100%);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -234,31 +235,33 @@ body {
 }
 
 .chaotic-title {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
     font-size: clamp(3rem, 8vw, 8rem);
     color: white;
     text-shadow: 
-        5px 5px 0 var(--burnt-orange),
-        10px 10px 0 var(--neon-pink),
-        15px 15px 20px rgba(0, 0, 0, 0.5);
-    transform: rotate(-3deg);
+        2px 2px 0 var(--warm-orange),
+        4px 4px 0 var(--accent-coral),
+        8px 8px 15px rgba(0, 0, 0, 0.3);
+    transform: rotate(-1deg);
     animation: titleGlitch 4s infinite;
     margin-bottom: 1rem;
 }
 
 @keyframes titleGlitch {
-    0%, 90%, 100% { transform: rotate(-3deg); }
-    95% { transform: rotate(3deg) scale(1.05); }
+    0%, 90%, 100% { transform: rotate(-1deg); }
+    95% { transform: rotate(1deg) scale(1.02); }
 }
 
 .subtitle {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
     font-size: clamp(1.5rem, 4vw, 3rem);
-    color: var(--chaos-yellow);
+    color: var(--subtle-gold);
     font-style: italic;
-    transform: rotate(2deg);
+    transform: rotate(1deg);
     margin-bottom: 3rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .dorm-bed {
@@ -272,7 +275,7 @@ body {
     border-radius: 20px;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 3px dashed var(--chaos-yellow);
+    border: 3px dashed var(--subtle-gold);
 }
 
 .interactive-item {
@@ -291,9 +294,9 @@ body {
 }
 
 .interactive-item:hover {
-    transform: scale(1.3) rotate(360deg);
-    background: var(--microwave-turquoise);
-    box-shadow: 0 0 30px var(--neon-pink);
+    transform: scale(1.2) rotate(180deg);
+    background: var(--primary-teal);
+    box-shadow: 0 0 20px var(--accent-coral);
 }
 
 @keyframes float {
@@ -302,30 +305,31 @@ body {
 }
 
 .chaos-button {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
     font-size: 2rem;
     padding: 1rem 2rem;
-    background: linear-gradient(45deg, var(--neon-pink), var(--microwave-turquoise));
+    background: linear-gradient(45deg, var(--accent-coral), var(--primary-teal));
     border: none;
     border-radius: 15px;
     color: white;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transform: rotate(-2deg);
+    transform: rotate(-1deg);
     transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .chaos-button:hover {
-    transform: rotate(2deg) scale(1.1);
+    transform: rotate(1deg) scale(1.05);
     animation: buttonShake 0.5s ease-in-out infinite;
 }
 
 @keyframes buttonShake {
-    0%, 100% { transform: rotate(2deg) scale(1.1) translateX(0); }
-    25% { transform: rotate(2deg) scale(1.1) translateX(-5px); }
-    75% { transform: rotate(2deg) scale(1.1) translateX(5px); }
+    0%, 100% { transform: rotate(1deg) scale(1.05) translateX(0); }
+    25% { transform: rotate(1deg) scale(1.05) translateX(-3px); }
+    75% { transform: rotate(1deg) scale(1.05) translateX(3px); }
 }
 
 .button-explosion {
@@ -369,25 +373,27 @@ section {
 }
 
 .section-title {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
     font-size: clamp(2rem, 5vw, 4rem);
-    color: var(--burnt-orange);
+    color: var(--warm-orange);
     margin-bottom: 1rem;
-    transform: rotate(-1deg);
-    text-shadow: 3px 3px 0 var(--microwave-turquoise);
+    transform: rotate(-0.5deg);
+    text-shadow: 2px 2px 0 var(--primary-teal);
 }
 
 .section-subtitle {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
     font-size: 1.5rem;
-    color: var(--dorm-grey);
+    color: var(--neutral-grey);
     font-style: italic;
 }
 
 /* HEIST FILES SECTION */
 .heist-files {
     background: linear-gradient(135deg, #2C2C2C, #1A1A1A);
-    color: var(--chaos-yellow);
+    color: var(--subtle-gold);
 }
 
 .surveillance-container {
@@ -397,7 +403,7 @@ section {
 
 .accordion-item {
     margin-bottom: 1rem;
-    border: 2px solid var(--microwave-turquoise);
+    border: 2px solid var(--primary-teal);
     border-radius: 10px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.5);
@@ -405,7 +411,7 @@ section {
 
 .accordion-header {
     padding: 1rem;
-    background: var(--dorm-grey);
+    background: var(--neutral-grey);
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -414,17 +420,18 @@ section {
 }
 
 .accordion-header:hover {
-    background: var(--microwave-turquoise);
-    transform: translateX(10px);
+    background: var(--primary-teal);
+    transform: translateX(5px);
 }
 
 .file-tab {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
     font-size: 1.2rem;
 }
 
 .classification {
-    background: var(--neon-pink);
+    background: var(--accent-coral);
     padding: 0.5rem;
     border-radius: 5px;
     font-size: 0.8rem;
@@ -1324,7 +1331,7 @@ section {
 
 /* ABOUT SECTION */
 .about-section {
-    background: var(--wallpaper-beige);
+    background: var(--soft-beige);
     position: relative;
 }
 
@@ -1346,7 +1353,7 @@ section {
     background: white;
     padding: 2rem;
     border-radius: 15px;
-    border: 3px solid var(--microwave-turquoise);
+    border: 3px solid var(--primary-teal);
     position: relative;
     transform: rotate(var(--card-rotation, 0deg));
     transition: all 0.3s ease;
@@ -1363,8 +1370,9 @@ section {
 }
 
 .story-card h3 {
-    font-family: 'Permanent Marker', cursive;
-    color: var(--burnt-orange);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: var(--warm-orange);
     margin-bottom: 1rem;
     font-size: 1.5rem;
 }
@@ -1372,7 +1380,7 @@ section {
 .story-card p {
     margin-bottom: 1rem;
     line-height: 1.6;
-    color: var(--dorm-grey);
+    color: var(--neutral-grey);
 }
 
 .about-stats {
@@ -1381,7 +1389,7 @@ section {
 }
 
 .stat-item {
-    background: linear-gradient(45deg, var(--burnt-orange), var(--neon-pink));
+    background: linear-gradient(45deg, var(--warm-orange), var(--accent-coral));
     color: white;
     padding: 2rem;
     border-radius: 15px;
@@ -1399,7 +1407,8 @@ section {
 }
 
 .stat-number {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
     font-size: 3rem;
     margin-bottom: 0.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
