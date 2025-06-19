@@ -235,8 +235,8 @@ body {
 }
 
 .chaotic-title {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 800;
+    font-family: 'Permanent Marker', cursive;
+    font-weight: 400;
     font-size: clamp(3rem, 8vw, 8rem);
     color: white;
     text-shadow: 
@@ -257,11 +257,11 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     font-size: clamp(1.5rem, 4vw, 3rem);
-    color: var(--subtle-gold);
+    color: #4FC3F7;
     font-style: italic;
     transform: rotate(1deg);
     margin-bottom: 3rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .dorm-bed {
@@ -373,8 +373,8 @@ section {
 }
 
 .section-title {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
+    font-family: 'Permanent Marker', cursive;
+    font-weight: 400;
     font-size: clamp(2rem, 5vw, 4rem);
     color: var(--warm-orange);
     margin-bottom: 1rem;
@@ -554,13 +554,22 @@ section {
 }
 
 .rate-btn {
-    background: var(--microwave-turquoise);
+    background: var(--primary-teal);
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 15px;
     color: white;
     cursor: pointer;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.rate-btn:hover {
+    background: var(--accent-coral);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .recipe-generator {
